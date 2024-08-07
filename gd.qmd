@@ -1,60 +1,72 @@
 # Gradient Descent
 
+```{r}
+#| echo: false
+#| message: false
+#| fig-align: center
+#| fig-cap: "Figure: 급성 백혈병 환자의 유전자 발현 정도 데이터."
+#| out-width: 70%
+#| fig-height: 3
+#| fig-weight: 2
+#| view-distance: 10
+
+library(tidyverse) 
+library(DescTools)
+library(showtext)
+library(dplyr)
+library(ggplot2)
+
+```
+
 ## Basic Setting
 
+```{=html}
 <!--
 https://www.uio.no/studier/emner/matnat/math/STK4051/v24/timeplan/lecture_04_sgd_2024.pdf
 -->
+```
+-   Goal: minimize some $F(\theta)$ w.r.t. $\theta$
 
-- Goal: minimize some $F(\theta)$ w.r.t. $\theta$
+-   **Empirical risk**: $$
+    F(\theta) = \frac{1}{n}\sum_{i=1}^n f_i (\theta) + J(\theta)
+    $$
 
-- **Empirical risk**:
-$$
-F(\theta) = \frac{1}{n}\sum_{i=1}^n f_i (\theta) + J(\theta)
-$$
+-   Options for $f_i (\theta)$: $$
+    f_i (\theta) = 
+    \begin{cases}
+    (\hat{y}_i - y_i)^, & \text{Least squares}\\
+    I(\hat{y}_i \neq y_i), & \text{Classification error}\\
+    -\log f(y_i; \theta), & \text{Log-likelihood}
+    \end{cases}
+    $$
 
-- Options for $f_i (\theta)$:
-$$
-f_i (\theta) = 
-\begin{cases}
-(\hat{y}_i - y_i)^, & \text{Least squares}\\
-I(\hat{y}_i \neq y_i), & \text{Classification error}\\
--\log f(y_i; \theta), & \text{Log-likelihood}
-\end{cases}
-$$
+-   Alternative: **Expected risk** $$
+    F(\theta) = E[f(\theta; \pmb{\varepsilon})], \quad{}\pmb{\varepsilon} \text{ is some random vector}
+    $$
 
-- Alternative: **Expected risk**
-$$
-F(\theta) = E[f(\theta; \pmb{\varepsilon})], \quad{}\pmb{\varepsilon} \text{ is some random vector}
-$$
-
-- $F(\cdot)$ is nice and smooth, a necessary requirement is
-$$
-\pmb{g}(\pmb{\theta}^{*}) = \frac{\partial}{\partial \pmb{\theta}}F(\pmb{\theta})|_{\pmb{\theta}=\pmb{\theta}^{*}} = \pmb{0}
-$$
+-   $F(\cdot)$ is nice and smooth, a necessary requirement is $$
+    \pmb{g}(\pmb{\theta}^{*}) = \frac{\partial}{\partial \pmb{\theta}}F(\pmb{\theta})|_{\pmb{\theta}=\pmb{\theta}^{*}} = \pmb{0}
+    $$
 
 ## Ordinary Gradient Descent
 
-- Ordinary gradient descent:
-$$
-\pmb{\theta}^{t+1} = \pmb{\theta}^{t} - \pmb{M}_t^{-1}\pmb{g}(\pmb{\theta}^t), \quad{} \pmb{M}_t \text{ is p.d.}
-$$
+-   Ordinary gradient descent: $$
+    \pmb{\theta}^{t+1} = \pmb{\theta}^{t} - \pmb{M}_t^{-1}\pmb{g}(\pmb{\theta}^t), \quad{} \pmb{M}_t \text{ is p.d.}
+    $$
 
-- Problem: Gradient might be difficult to compute
+-   Problem: Gradient might be difficult to compute
 
 ## Stochastic Gradient Descent
 
-- The **stochastic gradient** algorithm replaces the gradient by an **estimate** instead:
-$$
-\pmb{\theta}^{t+1} = \pmb{\theta}^t -\alpha_t \pmb{M}_t^{-1}\pmb{Z}(\pmb{\theta}^{t};\pmb{\phi}^t), \quad{} \pmb{Z}(\pmb{\theta}^T; \pmb{\phi}^t) \approx \pmb{g} (\pmb{\theta}^t)
-$$
+-   The **stochastic gradient** algorithm replaces the gradient by an **estimate** instead: $$
+    \pmb{\theta}^{t+1} = \pmb{\theta}^t -\alpha_t \pmb{M}_t^{-1}\pmb{Z}(\pmb{\theta}^{t};\pmb{\phi}^t), \quad{} \pmb{Z}(\pmb{\theta}^T; \pmb{\phi}^t) \approx \pmb{g} (\pmb{\theta}^t)
+    $$
 
-- A class of possibilities are given by
-$$
-\pmb{Z}(\pmb{\theta}^{t}; \pmb{\phi}^t) = \frac{1}{n_t} \sum_{i \in \mathcal{S}_t} \nabla f_i (\pmb{\theta}^t), \quad{} \mathcal{S}_t \subset \{ 1, \ldots, n\}, \quad{} n_t = |\mathcal{S}_t|
-$$
+-   A class of possibilities are given by $$
+    \pmb{Z}(\pmb{\theta}^{t}; \pmb{\phi}^t) = \frac{1}{n_t} \sum_{i \in \mathcal{S}_t} \nabla f_i (\pmb{\theta}^t), \quad{} \mathcal{S}_t \subset \{ 1, \ldots, n\}, \quad{} n_t = |\mathcal{S}_t|
+    $$
 
-```pseudocode
+``` pseudocode
 #| label: alg-sgd
 #| html-indent-size: "1.2em"
 #| html-comment-delimiter: "//"
@@ -78,31 +90,29 @@ $$
 \end{algorithm}
 ```
 
-::: {#exm-logistic sgd}
+::: {#exm-logisticsgd}
 
 ## Logistic Regression
 
 Logistic regression with $n$ is large:
 
+```{=tex}
 \begin{align*}
 Y_i &\sim \text{Binomial}(1, p(x_i)), \quad{} i=1, \ldots, n\\
 p(x_i) &= \frac{\exp (\theta_0 + \theta_1 \pmb{x})}{1+\exp (\theta_0 + \theta_1 \pmb{x})}
 \end{align*}
-
-
+```
 Want to minimize
 
+```{=tex}
 \begin{align*}
 F(\pmb{\theta}) &= -\sum_{i=1}^n [y_i \log (p_i) + (1-y_i) \log (1-p_i)]\\
 &= -\sum_{i=1}^n [y_i (\theta_0 + \theta_1 x_i)- \log (1 + \exp (\theta_0 + \theta_1 x_i))]
 \end{align*}
-
-Defining
-$$
+```
+Defining $$
 f_i (\pmb{\theta}) = -y_i (\theta_0 + \theta_1 x_i) + \log (1+\exp (\theta_0 + \theta_1 x_i))
-$$
-we have
-$$
+$$ we have $$
 \nabla f_i (\pmb{\theta}) = -
 \begin{pmatrix}
 y_i - \frac{\exp (\theta_0 + \theta_1 \pmb{x})}{1+\exp (\theta_0 + \theta_1 \pmb{x})}\\
@@ -111,7 +121,6 @@ y_i - \frac{\exp (\theta_0 + \theta_1 \pmb{x})}{1+\exp (\theta_0 + \theta_1 \pmb
 $$
 
 :::
-
 
 ```{r}
 #| echo: false
@@ -245,45 +254,115 @@ legend("bottomright",c("Opt","GD alpha=0.5","SGD,k=1, alpha=1/it ","SGD,k=10, al
 
 ### Assumptions for proof of convergence:
 
-- Requirements on the sequence $\{\alpha_t\}$:
+-   Requirements on the sequence $\{\alpha_t\}$:
 
+```{=tex}
 \begin{align*}
 \alpha_t &> 0\\
 \sum_{t=2}^{\infty} \frac{\alpha_t}{\alpha_1 + \cdots + \alpha_{t-1}}&=\infty\\
 \sum_{t=1}^{\infty} \alpha_t^2 &< \infty
 \end{align*}
-
+```
 Note that the second condition implies $\sum_{t=1}^{\infty} \alpha_t = \infty$.
 
-- Requirements on the function $g(x)$ combined with its estimate:
+-   Requirements on the function $g(x)$ combined with its estimate:
 
+```{=tex}
 \begin{align*}
 &\exists \delta \geq 0 \text{ such that } g(x) \leq -\delta \text{ for } x < \theta^{*} \text { and } g(x) \geq \delta \text{ for } \theta^{*}\\
 &E[Z(\theta; \phi)] = g(\theta) \text{ and }P(|Z(\theta; \phi)| < C)=1
 \end{align*}
-
+```
 The constraint $|Z(\theta; \phi)| < C$ is included to simplify the proof. More general results are available.
 
-- Want to show that the SGD procedure is consistent
+-   Want to show that the SGD procedure is consistent
 
 ::: {#def-consistent}
-
 ## Consistency
 
-If $\lim_{t\rightarrow \infty}\pmb{\theta}^t = \pmb{\theta}^{*}$ **in probability**, irrespective of any arbitrary initial value $\pmb{\theta}^{0}$, we call the procedure **consistent**. Here, convergence in probability means that for any $\varepsilon >0$,
-$$
+If $\lim_{t\rightarrow \infty}\pmb{\theta}^t = \pmb{\theta}^{*}$ **in probability**, irrespective of any arbitrary initial value $\pmb{\theta}^{0}$, we call the procedure **consistent**. Here, convergence in probability means that for any $\varepsilon >0$, $$
 \lim_{t\rightarrow\infty}P(|\pmb{\theta}^t - \pmb{\theta}^{*}|>\varepsilon)=0.
+$$
+:::
+
+-   Do this in three steps
+
+1.  Prove that L2 convergence gives consistency
+
+2.  Prove that the sequence converge
+
+3.  Prove that we converge to the true parameter
+
+## Lipschitz Continuous
+
+<!--
+https://www.linkedin.com/pulse/understanding-lipschitz-constant-yeshwanth-n-gdplc/
+-->
+
+- The **Lipschitz constant** provides a measure of how much a function can stretch or compress the distances between points.
+
+::: {#def-lipschitzcont}
+## Lipschitz continuous functions
+
+- A function is called **Lipschitz continuous** with Lipschitz constant $L>0$, if $\forall \mathbf{x}_1, \mathbf{x}_2$,
+$$
+\| f(\mathbf{x}_1) - f(\mathbf{x}_2) \|_2 \leq L \cdot \| \mathbf{x}_1 - \mathbf{x}_2\|_2.
 $$
 
 :::
 
-- Do this in three steps
+::: callout-tip
+## Remark
 
-1. Prove that L2 convergence gives consistency
+- Lipschitz continuity ensures that small changes in the input of the function result in proportionally small changes in the output, which is crucial in many areas like numerical analysis and machine learning, particularly in the training and convergence of models.
+:::
 
-2. Prove that the sequence converge
+**장점**:
 
-3. Prove that we converge to the true parameter
+1. Predictability: Lipschitz constant는 함수의 움직임을 predictable, stable하게 컨트롤함
+
+2. Optimization: Gradient를 포함한 최적화 문제에서 Lipschitz constants는 적합한 learning rate를 설정하고 수렴을 보장하는데 도움을 줌
+
+3. Robustness in Machine Learning: 신경망에서, Lipschitz continuity는 input의 small perturbation에도 로버스트한 모형을 만들게 함 (adversarial machine learning에서 중요)
+
+**단점**:
+
+1. Computational Complexity: Lipschitz constant를 계산하는 것이 특히 고차원 함수에서는 복잡하고 계산량이 많음
+
+2. Restrictiveness: 모든 함수가 유한한 Lipschitz constant를 갖는 것은 아니므로, 적용 범위의 한계가 있음
+
+3. Over-Simplification: 어떤 경우에는 Lipschitz constant에 의존하는 것이 복잡한 함수의 움직임을 너무 단순화 시키기도 함
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-align: center
+#| fig-cap: "Figure: (a) Lipschitz with L=0.25 and (b) Not Lipschitz."
+#| out-width: 70%
+#| fig-height: 3
+#| fig-weight: 2
+#| view-distance: 10
+
+par(mfrow=c(1,2))
+curve(1/(1+exp(-x)), from=-6,to=6, xlim=c(-6,6), ylim=c(0,1), main="(a) Lipschitz with L=0.25")
+curve(1/x, from=0.001, to=2, xlim=c(0,2), ylim=c(0,50), main="(b) Not Lipschitz")
+
+```
+
+- $1/(1+\exp(-x))$는 $L=0.25$로 Lipschitz continuous
+
+- $1/x$는 $(0,\infty)$에서 not Lipschitz continuous
+
+::: {#def-lsmooth}
+## $L$-smooth
+
+- If $f$ has a derivative (gradient) $f'$ which is Lipschitz continuous with $L>0$, then $f$ itself is called $L$-**smooth**. Further,
+$$
+f(\mathbf{x}_1) - f(\mathbf{x}_2) \leq \mathbf{f}'(\mathbf{x}_2)^T(\mathbf{x}_1 - \mathbf{x}_2) + \frac{L}{2}\cdot \| \mathbf{x}_1 - \mathbf{x}_2\|_2^2.
+$$
+
+:::
 
 ## Stochastic Gradients and Neural Nets
 
@@ -295,13 +374,14 @@ f(X) &= \sum_{m=1}^{M_{NN}}\beta_m \sigma (\alpha_m^T X + \alpha_0)
 \end{align*}
 $$
 
-- $Q$ and their derivatives require a sum of $n$ terms
+-   $Q$ and their derivatives require a sum of $n$ terms
 
-- Can use a stochastic version by samping randomly a **subset** of $\{1,\ldots, n\}$
+-   Can use a stochastic version by samping randomly a **subset** of $\{1,\ldots, n\}$
 
-- Called **mini-batching**
+-   Called **mini-batching**
 
-- Advantages:
-  + Much **faster**
-  + Often give **better solutions**
-  + Can be used to **track changes**
+-   Advantages:
+
+    -   Much **faster**
+    -   Often give **better solutions**
+    -   Can be used to **track changes**
