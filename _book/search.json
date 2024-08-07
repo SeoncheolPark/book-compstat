@@ -1,0 +1,288 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Computational Satistics",
+    "section": "",
+    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Intro",
+      "Preface"
+    ]
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n1 + 1\n\n[1] 2\n\n\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "Intro",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html",
+    "href": "optim.html",
+    "title": "2  최적화 방법",
+    "section": "",
+    "text": "2.1 Optimization\n통계에서 최적화를 해야 하는 상황",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#optimization",
+    "href": "optim.html#optimization",
+    "title": "2  최적화 방법",
+    "section": "",
+    "text": "Maximum likelihood \\(\\max_{\\theta} L(\\theta | \\pmb{y})\\)",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#maximum-likelihood-theory",
+    "href": "optim.html#maximum-likelihood-theory",
+    "title": "2  최적화 방법",
+    "section": "2.2 Maximum Likelihood Theory",
+    "text": "2.2 Maximum Likelihood Theory\n\nFor independent data: likelihood function \\[\nL(\\theta) = \\prod_{i=1}^n f(\\pmb{x}_i | \\theta)\n\\]\nLog-likelihood function \\[\n\\ell (\\theta) = \\sum_{i=1}^n \\log (f(\\pmb{x}_i ; \\theta))\n\\]\nMaximum likelihood estimate: \\(\\hat{\\theta}_{\\text{ML}}=\\text{argmax}_{\\theta} L(\\theta)\\)\nFor smooth likelihoods, necessary requirement:\n\n\\[\\begin{align*}\n\\pmb{s}(\\pmb{\\theta}) &\\equiv \\ell ' (\\pmb{\\theta}), \\quad{} |\\pmb{\\theta}| \\text{ equations, called score vector}\\\\\n\\pmb{J}(\\pmb{\\theta}) &\\equiv -\\ell '' (\\pmb{\\theta}), \\quad{}\\text{ positive (definite), called observed Fisher information}\n\\end{align*}\\]\n\nTheory:\n\n\\(E[\\pmb{s}(\\pmb{\\theta})] = 0\\)\n\\(\\pmb{I}(\\pmb{\\theta}) \\equiv - E[\\ell '' (\\pmb{\\theta})] = E[\\pmb{J}(\\pmb{\\theta})]= \\text{Var}[\\pmb{s}(\\pmb{\\theta})], \\quad{} \\text{expected Fisher information}\\)\nFor large \\(n\\) (and some regularity assumptions) \\[\n\\hat{\\pmb{\\theta}}_{\\text{Ml}} \\approx \\mathcal{N}(\\pmb{\\theta}, \\pmb{I}^{-1}(\\hat{\\pmb{\\theta}}_{\\text{ML}})) \\approx \\mathcal{N}(\\pmb{\\theta}, \\pmb{J}^{-1}(\\hat{\\pmb{\\theta}}_{\\text{ML}}))\n\\]",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#newton의-방법",
+    "href": "optim.html#newton의-방법",
+    "title": "2  최적화 방법",
+    "section": "2.3 Newton의 방법",
+    "text": "2.3 Newton의 방법\nQ. 뉴턴법은 언제 쓰는가?\n\n\\(f(x)=0\\)의 해를 근사적으로 구할 때\n\\(g(x)=h(x)\\)인 \\(x\\)를 근사적으로 구할 때\n\\(f(x)\\)의 최소값 또는 최대값을 구할 때\n\nQ. 뉴턴법의 한계\n\n해가 여러개 일 경우\n수렴속도가 초깃값에 따라 달라짐\n\nQ. 통계에서의 뉴턴법? ML estimation\n1차원에서의 ML 추정을 생각해보자. \\[\n\\text{argmax}_{\\theta} L(\\theta | \\pmb{y}) = \\text{argmax}_{\\pmb{\\theta}}\\underbrace{\\log L(\\theta | \\pmb{y})}_{\\ell (\\theta | \\pmb{y})}\n\\]\n이것을 \\(\\theta^{*}\\) 근처에서 테일러 근사로 전개해보자.\n\\[\\begin{align*}\n\\ell (\\theta) &\\approx \\ell (\\theta^{*}) + (\\theta - \\theta^{*}) \\ell ' (\\theta^{*}) + \\frac{1}{2}(\\theta - \\theta^{*})^2 \\ell '' (\\theta^{*})\\\\\n&= \\ell (\\theta^{*}) + (\\theta - \\theta^{*}) s (\\theta^{*}) - \\frac{1}{2}(\\theta - \\theta^{*})^2 J (\\theta^{*})\n\\end{align*}\\]\n즉 score 함수는 \\(s(\\theta) = \\ell ' (\\theta)\\), observed information은 \\(J(\\theta) = - \\ell '' (\\theta)\\)이다.\n\nSolving the maximum of the approximation \\[\n\\theta = \\theta^{*} + \\frac{s(\\theta^{*})}{J(\\theta^{*})} = \\theta^{*} - \\frac{\\ell ' (\\theta^{*})}{\\ell '' (\\theta^{*})}\n\\]\n\n\n2.3.1 Stoping criteria\n\n반복법에서는 어느 시점에 어떤 기준을 가지고 멈춰야 할지를 정하는 것이 중요하다.\n\n\nAbsolute convergence: 이는 \\(x\\)가 클 경우에 시간이 오래 걸릴 수 있다. \\[|x^{(t+1)} -x^{(t)}| &lt; \\varepsilon \\text{ or }\\| \\pmb{x}^{(t+1)} - \\pmb{x}^{(t)} \\| &lt; \\varepsilon\\]\nRelative convergence: 이는 \\(|x^{(t)}|\\)가 작을 경우에 불안정할 수 있다. \\[\n\\frac{|x^{(t+1)}- x^{(t)}|}{|x^{(t)}|} &lt; \\varepsilon \\text{ or }\\frac{\\|x^{(t+1)}- x^{(t)}\\|}{\\|x^{(t)}\\|} &lt; \\varepsilon\n\\]\nAfter \\(N\\) iterations (additional criteria)\n\n\n\n2.3.2 Log likelihood의 score와 observed information\n\nLikelihood fct (\\(\\sigma\\) is known) \\[\nL(\\mu) = \\prod_{i=1}^n \\frac{1}{\\sqrt{2\\pi\\sigma^2}} \\exp \\Big\\{-\\frac{1}{2}\\Big( \\frac{x_i- \\mu}{\\sigma} \\Big)^2 \\Big\\}\n\\]\nLog-likelihood \\[\n\\ell(\\mu) = \\sum_{i=1}^n -\\frac{1}{2}\\log 2\\pi - \\frac{1}{2}\\log \\sigma^2 - \\frac{1}{2}\\Big( \\frac{x_i -\\mu}{\\sigma} \\Big)^2\n\\]\nScore fct \\[\ns(\\mu) = \\ell ' (\\mu) = \\sum_{i=1}^n -0 - 0 - \\frac{x_i - \\mu}{\\sigma^2} = \\frac{1}{\\sigma^2} \\sum_{i=1}^n  (x_i - \\mu)\n\\]\nInformation \\[\nJ(\\mu) = -\\ell '' (\\mu) = - s' (\\mu) = - \\frac{1}{\\sigma^2}\\sum_{i=1}^n (-1) = \\frac{n}{\\sigma^2}\n\\]\n\n\n\n2.3.3 Multidimensional extension\n\nConsider log likelihood: \\[\n\\text{argmax}_{\\pmb{\\theta}} \\ell (\\pmb{\\theta}) = \\text{argmax}_{\\pmb{\\theta}} L(\\pmb{\\theta}|\\pmb{y})= \\text{argmax}_{\\pmb{\\theta}} \\log( L(\\pmb{\\theta}|\\pmb{y}) )\n\\]\n그러면 다차원에서 테일러 근사는 다음과 같다.\n\n\\[\\begin{align*}\n\\ell (\\pmb{\\theta}) &\\approx \\ell (\\pmb{\\theta}^{*}) + (\\pmb{\\theta} - \\pmb{\\theta}^{*})^T \\ell ' (\\pmb{\\theta}^{*}) + \\frac{1}{2} (\\pmb{\\theta} - \\pmb{\\theta}^{*})^T \\pmb{H}(\\pmb{\\theta}^{*})(\\pmb{\\theta}-\\pmb{\\theta}^{*})\\\\\n&\\approx \\ell (\\pmb{\\theta}^{*}) + (\\pmb{\\theta} - \\pmb{\\theta}^{*})^T \\pmb{s} (\\pmb{\\theta}^{*}) - \\frac{1}{2} (\\pmb{\\theta} - \\pmb{\\theta}^{*})^T \\pmb{J}(\\pmb{\\theta}^{*})(\\pmb{\\theta}-\\pmb{\\theta}^{*})\n\\end{align*}\\]\n\nScore function: \\[\n\\pmb{s} (\\pmb{\\theta}) = \\nabla \\ell (\\pmb{\\theta}) = \\frac{\\partial}{\\partial \\pmb{\\theta}} \\ell (\\pmb{\\theta})\n\\]\nObserved information: \\[\n\\pmb{J} (\\pmb{\\theta}) = -\\nabla^2 \\ell (\\pmb{\\theta}) = \\frac{\\partial^2}{\\partial \\pmb{\\theta}^2}\\ell (\\pmb{\\theta})\n\\]\n여기서는 반복법을 이용해 다음의 근사를 풀어 최대화한다. \\[\n\\pmb{\\theta} = \\pmb{\\theta}^{*} + \\pmb{J}(\\pmb{\\theta}^{*})^{-1}\\pmb{s}(\\pmb{\\theta}^{*}) = \\pmb{\\theta}^{*} - \\pmb{H}(\\pmb{\\theta}^{*})^{-1}\\nabla \\ell (\\pmb{\\theta}^{*})\n\\]\n\n\n\n2.3.4 \\(\\mathbb{R}^p\\)에서의 log likelihood의 score와 observed information\n\nLikelihood: \\(\\Sigma\\)가 알려져 있다고 할 때 \\[\nL(\\mu) = \\prod_{i=1}^n \\frac{1}{\\sqrt{(2\\pi)^p |\\Sigma|}}\\exp \\Big\\{ - \\frac{1}{2}(x_i - \\mu)^T \\Sigma^{-1}(x_i - \\mu) \\Big\\}\n\\]\nLog-likelihood \\[\n\\ell (\\mu) = \\sum_{i=1}^n -\\frac{p}{2}\\log 2\\pi - \\frac{1}{2}\\log |\\Sigma | - \\frac{1}{2} (x_i - \\mu)^T \\Sigma^{-1}(x_i - \\mu)\n\\]\nScore function \\[\ns(\\mu) = \\nabla \\ell (\\mu) = \\sum_{i=1}^n \\Sigma^{-1} (x_i - \\mu) = \\Sigma^{-1}\\sum_{i=1}^n (x_i - \\mu)\n\\]\nInformation \\[\nJ(\\mu) = - \\nabla^2 \\ell (\\mu) = - \\sum_{i=1}^n -\\Sigma^{-1} = n \\Sigma^{-1} = \\Big( \\frac{1}{n}\\Sigma \\Big)^{-1}\n\\]",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#fisher-scoring",
+    "href": "optim.html#fisher-scoring",
+    "title": "2  최적화 방법",
+    "section": "2.4 Fisher scoring",
+    "text": "2.4 Fisher scoring\n\n뉴턴의 방법은 \\(\\ell'' (\\theta) &lt;0\\)이거나 \\(J(\\theta) &gt;0\\)이라는 조건을 필요로 한다. 다변량에서는 \\(\\pmb{J}(\\pmb{\\theta})\\)가 positive definite여야 한다.\n\\(\\pmb{J}(\\pmb{\\theta})\\)는 stochastic (depend on data)\n\\(\\pmb{I}(\\pmb{\\theta}) = E[ \\pmb{J}(\\pmb{\\theta})]\\): expected information matrix\n이때 \\(\\pmb{I}(\\pmb{\\theta}) = \\text{Var}[\\pmb{s}(\\pmb{\\theta})]\\)가 항상 positive (semi-)definite임을 보일 수 있다.\n\nFisher scoring algorithm은 다음과 같다. \\[\n\\pmb{\\theta}^{(t+1)} = \\pmb{\\theta}^{(t)} + [\\pmb{I}(\\pmb{\\theta}^{(t)})]^{-1}\\pmb{s}(\\pmb{\\theta}^{(t)})\n\\] 이렇게 하면 계산이 좀 더 쉬워지고 뉴턴의 방법에 비해 좀 더 안정적으로 된다고 한다.\n\nExample 2.1 (\\(p\\)차원에서 정규분포를 따르는 자료의 \\(\\pmb{I}(\\pmb{\\theta})\\)) \\(\\mathbb{R}^p\\)에서 \\(I(\\mu) = E(J(\\mu)) = \\text{Var}(s(\\mu))\\)임을 보일 수 있다.\n\n\\(s(\\mu) = \\Sigma^{-1} \\sum_{i=1}^n (x_i - \\mu)\\)\n\\(J(\\mu) = \\Big( \\frac{1}{n}\\Sigma \\Big)^{-1}\\)\n\\(E(J(\\mu)) = E\\Big( (\\frac{1}{n}\\Sigma)^{-1} \\Big)= (\\frac{1}{n|\\Sigma)^{-1}\\)\n\\(s(\\mu)\\)의 분산\n\n\\[\\begin{align*}\n\\text{Var}(s(\\mu)) &= \\text{Var} \\Big( \\Sigma^{-1} \\sum_{i=1}^n (x_i - \\mu)\\Big)\\\\\n&= \\sum_{i=1}^n \\Sigma^{-1}\\text{Var}(x_i - \\mu)\\Sigma^{-1} \\quad{} (\\because \\text{independence})\\\\\n&= \\sum_{i=1}^n \\Sigma^{-1}\\Sigma \\Sigma^{-1} = n \\Sigma^{-1}\\\\\n&= \\Big( \\frac{1}{n}\\Sigma \\Big)^{-1}\n\\end{align*}\\]",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#gauss-newton-method",
+    "href": "optim.html#gauss-newton-method",
+    "title": "2  최적화 방법",
+    "section": "2.5 Gauss-Newton method",
+    "text": "2.5 Gauss-Newton method\nQ. 가우스-뉴턴법: 뉴턴법을 연립방정식 형태로 확장시킨 것(??)\n\n다음과 같은 모형을 생각해보자. \\[\nY_i = f(\\pmb{z}_i ; \\pmb{\\theta}) + \\varepsilon_i\n\\] 그리고 \\(g(\\pmb{\\theta}) = -\\sum_{i=1}^n (y_i - f(\\pmb{z}_i; \\pmb{\\theta}))^2\\)을 최대화하고자 한다.\n\n\n뉴턴의 방법은 \\(g(\\pmb{\\theta})\\)를 근사하는 방법이다.\n가우스-뉴턴의 방법은 \\(f(\\pmb{z}_i;\\pmb{\\theta})\\)를 근사하는 방법이다. \\[\n\\tilde{f}(\\pmb{z}_i ; \\pmb{\\theta}; \\pmb{\\theta}^{(t)}) \\approx f(\\pmb{z}_i; \\pmb{\\theta}^{(t)}) + (\\pmb{\\theta} - \\pmb{\\theta}^{(t)})\\nabla_{\\pmb{\\theta}} f(\\pmb{z}_i, \\pmb{\\theta}^{(t)})\n\\]\n\n\nGauss-Newton step은 다음을 최대화하는 것이다:\n\n\\[\\begin{align*}\n\\tilde{g}(\\pmb{\\theta}) &= - \\sum_{i=1}^n (y_i - \\tilde{f}(\\pmb{z}_i ; \\pmb{\\theta}; \\pmb{\\theta}^{(t)}))^2\\\\\n&= -\\sum_{i=1}^n [y_i - f(\\pmb{z}_i; \\pmb{\\theta}^{(t)})+ (\\pmb{\\theta}-\\pmb{\\theta}^{(t)})^T\\nabla_{\\pmb{\\theta}}f(\\pmb{z}_i, \\pmb{\\theta}^{(t)})]^2\n\\end{align*}\\]\n\n이것의 해(solution)는 다음과 같다: \\[\n\\pmb{\\theta}^{(t+1)} = \\pmb{\\theta}^{(t)}+ [(\\pmb{A}^{(t)})^T\\pmb{A}^{(t)} ]^{-1}(\\pmb{A}^{(t)})^T[\\pmb{y} - \\pmb{f}(\\pmb{z}; \\pmb{\\theta}^{(t)})]\n\\] 이때 \\[\n\\pmb{f}(\\pmb{z}; \\pmb{\\theta}) = \\begin{bmatrix}\nf(\\pmb{z}_1;\\pmb{\\theta})\\\\\n\\vdots\\\\\nf(\\pmb{z}_n;\\pmb{\\theta})\n\\end{bmatrix}, \\quad{}\n\\pmb{A}^{(t)}_{n\\times p} = \\begin{bmatrix}\n\\nabla_{\\theta} f(\\pmb{z}_1, \\theta)\\\\\n\\vdots\\\\\n\\nabla_{\\theta} f(\\pmb{z}_n, \\theta)\n\\end{bmatrix}\n\\]\n장점: first derivatives만 있어도 된다.\n\n\n2.5.1 회귀분석에서의 가우스-뉴턴법\n\n회귀분석: 다음을 푸는 것 \\[\n\\min_{\\beta} \\sum_{i=1}^n (y_i - \\beta^T x_i)^2\n\\]\n\n\\(\\pmb{X} = \\begin{bmatrix} x_1 \\\\ \\vdots \\\\ x_n \\end{bmatrix}\\)이라고 할 때 최소제곱법으로 구하면 다음과 같다.\n\\[\\begin{align*}\n&\\min_{\\pmb{\\beta}}(\\pmb{y} - \\pmb{X}\\pmb{\\beta})^T(\\pmb{y} - \\pmb{X}\\pmb{\\beta})\\\\\n&\\frac{\\partial}{\\partial\\pmb{\\beta}} 2\\pmb{X}^T(\\pmb{y}-\\pmb{X\\beta})=0\\\\\n&\\pmb{\\beta} = (\\pmb{X}^T\\pmb{X})^{-1}\\pmb{X}^T\\pmb{y}\n\\end{align*}\\]\n\n이것을 근사 방법으로 풀면 다음과 같다.\n\n\\[\\begin{align*}\n&\\min_{\\pmb{\\beta}}\\sum_{i=1}^n (y_i - f(z_i, \\theta))^2\\\\\n&\\min_{\\pmb{\\beta}}\\sum_{i=1}^n (y_i - f(z_i, \\theta_k)- (\\theta-\\theta_k)^T\\nabla f(z_i, \\theta_k))^2\\\\\n\\theta_{k+1} &= \\theta_k + \\Big( \\pmb{A}^{(k)^T}\\pmb{A}^{(k)}  \\Big)^{-1}\\pmb{A}^{(k)^T}(\\pmb{y}-\\pmb{f}(\\pmb{z};\\pmb{\\theta}))\n\\end{align*}\\]\n이때 \\[\n\\pmb{f}(\\pmb{z};\\pmb{\\theta}) =\n\\begin{bmatrix}\nf(\\pmb{z}_1; \\pmb{\\theta})\\\\\n\\vdots\\\\\nf(\\pmb{z}_n; \\pmb{\\theta})\n\\end{bmatrix}, \\quad{}\n\\pmb{A}^{(k)}=\n\\begin{bmatrix}\n\\nabla_{\\pmb{\\theta}}f(\\pmb{z}_1,\\theta_k)\\\\\n\\vdots\\\\\n\\nabla_{\\pmb{\\theta}}f(\\pmb{z}_n,\\theta_k)\n\\end{bmatrix}\n\\]\n종합적으로 정리하면 뉴턴류의 방법은 미분계수가 필요하다.",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#other-optimization-methods",
+    "href": "optim.html#other-optimization-methods",
+    "title": "2  최적화 방법",
+    "section": "2.6 Other optimization methods",
+    "text": "2.6 Other optimization methods\n\nSecant methods: Replace \\(J(\\theta) = -\\ell '' (\\theta)\\) by finite difference approximation\nFixed-point methods (\\(\\max_x g(x)\\))\n\nFind function \\(G(x)\\) such that \\(G(x) = x \\Longleftrightarrow g'(x) = 0\\)\nUse updating scheme \\(x^{(t+1)} = G(x^{(t)})\\)\nObvious choice: \\(G(x) = \\alpha g' (x) + x \\Longrightarrow x^{(t+1)} = x^{(t)} + \\alpha g'(x^{(t)})\\)\nRequirements for convergence: (1) \\(x \\in [a,b] \\Longrightarrow G(x) \\in [a,b]\\), (2) \\(|G(x_1) - G(x_2) | \\leq \\lambda |x_1 - x_2|\\) for all \\(x_1, x_2 \\in [a,b]\\) for some \\(\\lambda \\in (0,1)\\)",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#fixed-point",
+    "href": "optim.html#fixed-point",
+    "title": "2  최적화 방법",
+    "section": "2.7 Fixed Point",
+    "text": "2.7 Fixed Point\n\n다음의 예를 보자. \\[\n\\text{argmax}_{x} g(x) = x\\log (x) - x + 0.5x^2, \\quad{} g'(x) = \\log (x) + x\n\\]\nPossible choices of \\(G\\): \\[\n\\begin{align*}\nG_1 (x) &= g'(x) + x = \\log (x) + 2x\\\\\nG_2 (x) &= - \\log (x)\\\\\nG_3 (x) &= \\exp (-x)\\\\\nG_4 (x) &= (x+\\exp(-x))/2\n\\end{align*}\n\\]\n\n\n#fixed_point_example.R\n#https://www.uio.no/studier/emner/matnat/math/STK4051/v24/timeplan/lecture_01_chapter2_2024.pdf\n#Fixed point\nG = function(x){c(log(x[1])+2*x[1],-log(x[2]),exp(-x[3]),(x[4]+exp(-x[4]))/2)}\n\nx = rep(10,4)\nxM = matrix(x,ncol=4)\nfor(i in 1:20)\n{\n    x = c(G(x))\n    xM = rbind(xM,x)\n}\n\nWarning in log(x[2]): NaNs produced\n\nmatplot(xM,type=\"l\",ylim=c(-3,30),lty=1,lwd=2)\nlegend(\"topright\",c(\"G1\",\"G2\",\"G3\",\"G4\"),lty=1,col=1:4)\n\n\n\n\nFigure: Fixed point example.\n\n\n\nxM\n\n          [,1]      [,2]         [,3]       [,4]\n  1.000000e+01 10.000000 1.000000e+01 10.0000000\nx 2.230259e+01 -2.302585 4.539993e-05  5.0000227\nx 4.770987e+01       NaN 9.999546e-01  2.5033802\nx 9.928488e+01       NaN 3.678961e-01  1.2925941\nx 2.031678e+02       NaN 6.921891e-01  0.7835759\nx 4.116496e+02       NaN 5.004793e-01  0.6201728\nx 8.293193e+02       NaN 6.062400e-01  0.5790121\nx 1.665359e+03       NaN 5.453977e-01  0.5697319\nx 3.338136e+03       NaN 5.796112e-01  0.5677045\nx 6.684385e+03       NaN 5.601161e-01  0.5672648\nx 1.337758e+04       NaN 5.711428e-01  0.5671696\nx 2.676466e+04       NaN 5.648795e-01  0.5671490\nx 5.353951e+04       NaN 5.684286e-01  0.5671445\nx 1.070899e+05       NaN 5.664148e-01  0.5671436\nx 2.141914e+05       NaN 5.675566e-01  0.5671433\nx 4.283951e+05       NaN 5.669089e-01  0.5671433\nx 8.568031e+05       NaN 5.672762e-01  0.5671433\nx 1.713620e+06       NaN 5.670679e-01  0.5671433\nx 3.427254e+06       NaN 5.671860e-01  0.5671433\nx 6.854523e+06       NaN 5.671190e-01  0.5671433\nx 1.370906e+07       NaN 5.671570e-01  0.5671433",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#nelder-mead",
+    "href": "optim.html#nelder-mead",
+    "title": "2  최적화 방법",
+    "section": "2.8 Nelder-Mead",
+    "text": "2.8 Nelder-Mead\n\nStarts with \\(p+1\\) distinct points \\(\\pmb{x}_1, \\ldots, \\pmb{x}_{p+1}\\)\nPoints ranked through \\(g(\\pmb{x}_1), \\ldots, g(\\pmb{x}_{p+1})\\)\n\\(\\pmb{x}_{\\text{best}}\\) and \\(\\pmb{x}_{\\text{worst}}\\) best and worst points\nCalculate \\(\\pmb{c} = \\frac{1}{p}[\\sum_{i=1}^{p+1}\\pmb{x}_{i}-\\pmb{x}_{\\text{worst}}]\\)\nFind new value \\(\\pmb{x}_r = \\pmb{c} + \\alpha (\\pmb{c}- \\pmb{x}_{\\text{worst}})\\), replace with \\(\\pmb{x}_{\\text{worst}}\\)\nDerivative를 필요로 하지 않는다는 장점",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#bisection",
+    "href": "optim.html#bisection",
+    "title": "2  최적화 방법",
+    "section": "2.9 Bisection",
+    "text": "2.9 Bisection\n(교재 exercise 2.1)\n\nStart with two points one point at each side\nPropose a point in the middle\nReplace one endpoint\nReplace the one with the same sign of derivative as the one proposed\n\nThis is a case where we:\n\nControl error of approximation\nError decay exponentially\nIf \\(f'(x)\\) is monotone between starting points on each side",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#gauss-seidel",
+    "href": "optim.html#gauss-seidel",
+    "title": "2  최적화 방법",
+    "section": "2.10 Gauss-Seidel",
+    "text": "2.10 Gauss-Seidel\n\nAim: maximize \\(g(\\pmb{\\theta})\\), \\(\\pmb{\\theta} = (\\theta_1, \\ldots, \\theta_p)\\)\nProcedure: For \\(j=1,\\ldots, p\\),\n\nMaximize \\(g(\\pmb{\\theta})\\) w.r.t. \\(\\theta_j\\) keeping the other \\(\\theta_k\\)’s fixed\nReduce the multivariate problem to many univariate problems",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#bfgs-broyden-fletcher-goldfarb-shanno-algorithm",
+    "href": "optim.html#bfgs-broyden-fletcher-goldfarb-shanno-algorithm",
+    "title": "2  최적화 방법",
+    "section": "2.11 BFGS (Broyden-Fletcher-Goldfarb-Shanno) algorithm",
+    "text": "2.11 BFGS (Broyden-Fletcher-Goldfarb-Shanno) algorithm\n\nQuasi-Newton (variable metric) method (\\(\\text{argmax} g(\\pmb{x})\\)) \\[\nx_{k+1} = x_k - \\alpha_k M_k^{-1}\\nabla g(x_k)\n\\]\n\\(M_k\\): an approximation to the Hessian\n\\(\\alpha_k\\): obtained by line-search\nDo a rank \\(1\\) update of \\(M_k\\) to \\(M_{k+1}\\) using quantities computed during iterations\nNote: even though \\(x_k\\) converges, \\(M_k\\) may not converge to Hessian in optimum",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#optim-in-r",
+    "href": "optim.html#optim-in-r",
+    "title": "2  최적화 방법",
+    "section": "2.12 optim in R",
+    "text": "2.12 optim in R\n\noptim(par, fn, gr=NULL,\nmethod=c(\"Nelder-Mead\", \"BFGS\", \"CG\", \"L-BFGS-B\", \"SANN\", \"Brent\"),\nlower = -Inf, upper=Inf, control=list(), hessian=FALSE)\n\n\nNelder-Mead: Default. Robust but can be slow\nBFGS:\n\n\\(\\pmb{x}^{(t+1)} = \\pmb{x}^{(t)} - (\\pmb{M}^{(t)})^{-1}\\pmb{g}' (\\pmb{x}^{(t)})\\), \\(\\pmb{M}^{(t)}\\) approximation of \\(\\pmb{g}''(\\pmb{x}^{(t)})\\)\n\\(\\pmb{M}^{(t)}\\): updated by a low-rank operation\n\nCG (conjugate gradient): Optimize along gradient direction (iteratively)\nL-BFGS-B: Modification of BFGS to allow for constraints\nSANN: Simulated annealing\nBrent: One-dimensional method",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#iteratively-reweighted-least-squares",
+    "href": "optim.html#iteratively-reweighted-least-squares",
+    "title": "2  최적화 방법",
+    "section": "2.13 Iteratively Reweighted Least Squares",
+    "text": "2.13 Iteratively Reweighted Least Squares\n\n2.13.1 Weighted least square\n\nAssume you have data with unknown mean an known variance and want to estimate mean\n\n\\[\\begin{align*}\n\\min_{\\pmb{\\beta}} \\sum \\frac{(y_i - \\pmb{x}_i^T \\pmb{\\beta}_i)^2}{\\sigma_i^2}&=\\min_{\\pmb{\\beta}} \\sum w_i (y_i -\\pmb{x}_i^T)\\\\\n\\hat{\\pmb{\\beta}}_{\\text{WLS}} = (\\pmb{X}^T\\pmb{W}\\pmb{X})^{-1}\\pmb{X}^T\\pmb{Wy}\n\\end{align*}\\]\n이때 \\(\\pmb{W} = \\text{diag}(\\pmb{w})\\)이다.\n\n가중최소제곱의 유도\n\n\\[\\begin{align*}\n&\\min_{\\pmb{\\beta}}\\sum_{i=1}^n w_i (y_i -\\pmb{\\beta}^T x_i)^2\\\\\n&\\min_{\\pmb{\\beta}} (\\pmb{y}-\\pmb{X\\beta})^T\\pmb{W}(\\pmb{y}-\\pmb{X\\beta})\\\\\n&\\frac{\\partial}{\\partial \\pmb{\\beta}}: 2\\cdot \\pmb{X}^T\\pmb{W}(\\pmb{y}-\\pmb{X\\beta})=0\\\\\n&\\pmb{X}^T\\pmb{W}\\pmb{X\\beta} = \\pmb{X}^T\\pmb{Wy}\\\\\n&\\pmb{\\beta}=(\\pmb{X}^T\\pmb{W}\\pmb{X})^{-1}\\pmb{X}^T\\pmb{Wy}\n\\end{align*}\\]\n앞서는 분산을 알고있다고 하는 상황에서 \\(\\hat{\\pmb{\\beta}}_{\\text{WLS}}\\)를 구했다.\nQ. 만약 분산이 알려져있지 않고 대신 모수의 함수라고 하면 어떻게 구할 것인가? \\[\n\\min_{\\pmb{\\beta}} \\sum w_i (\\pmb{\\beta},\\pmb{x}_i)(y_i - \\pmb{x}_i^T\\pmb{\\beta}_i)^2\n\\] Then update the weights with previous estimate of parameter.\n\nUseful trick, can be used for GLM (generalized linear models).\n\n앞선 \\(\\min_{\\pmb{\\beta}} \\sum w_i (\\pmb{\\beta},\\pmb{x}_i)(y_i - \\pmb{x}_i^T\\pmb{\\beta}_i)^2\\)는 다음과 같이 반복법으로 풀 수 있다.\n\n\\(\\pmb{w}^{(0)}=\\pmb{1}\\)\nFor \\(k=1\\), until convergence\n\n2-1. \\(\\pmb{\\beta}^{(k)} = \\text{argmin}\\Big\\{ \\sum w_i^{(k-1)}(y_i - \\pmb{x}_i^T\\pmb{\\beta}_i)^2 \\Big\\},\\quad{} \\text{i.e. }\\pmb{\\beta}^{(k)}=\\hat{\\pmb{\\beta}}_{\\text{WLS}}(\\pmb{W}^{(k-1)})\\)\n2-2. \\(w_i^{(k)} = w_i (\\pmb{\\beta}^{(k)}, \\pmb{x}_i)\\)\n\n\n2.13.2 L1 regression\n\nL1 regression은 outlier에 robust한 방법으로 quadratic loss를 absolute loss로 바꾸는 방법이다.\nAbsolute loss: \\[\n\\text{argmin}_{\\pmb{\\beta}} \\sum_{i=1}^n |y_i - \\pmb{\\beta}^T x_i|\n\\] 이때 \\[\nw_i (\\pmb{\\beta}) = \\frac{1}{|y_i - \\pmb{\\beta}^T x_i|}\n\\] 로 두면 \\[\n\\sum_{i=1}^n |y_i - \\pmb{\\beta}^T x_i| = \\sum_{i=1}^n w_i (\\pmb{\\beta})(y_i - \\pmb{\\beta}^T x_i)^2\n\\] 여기서 IRLS를 하면 다음과 같다.\n\n\nStart with \\(w_i^{(0)} = 1\\) (=least squares regression) to get \\(\\pmb{\\beta}^{(0)}\\)\nIn iteration \\(k\\) set \\(w_i^{(k)} = \\frac{1}{|y_i -\\pmb{\\beta}^{(k-1)^T}x_i|}\\) or \\(\\min \\Big\\{\\frac{1}{|y_i -\\pmb{\\beta}^{(k-1)^T}x_i|} , W_{\\max} \\Big\\}\\)\n\n\n#######################################################\n## set upmodel\nbeta=c(1,1)\nset.seed(231171)\nn = 20\n\neps=rnorm(n,0,1)\nx=rnorm(n,0,2)\nXdata=cbind(1,x)\n\ny=beta[1]+beta[2]*x+eps\n\n###############################################################\n## code\n\n## Least squares\nleastSquares = function(X,y)\n{\n  betaHat = solve(t(X)%*%X) %*%(t(X)%*%y )\n}\n\n\n# IRLS\n\nIRLS_L1 = function(X,y)\n{  \n  \n  betaHat = solve(t(X)%*%X) %*%(t(X)%*%y )\n  pred = X%*%betaHat\n  res  =(y-pred)\n  \n  betaPrev=c(0,0)\n  betaWHat=betaHat\n  it=0\n  \n  while(sum(abs(betaPrev-betaWHat))&gt;0.0001 & it&lt;100)\n  {  maxW=10\n     it=it+1\n     betaPrev=betaWHat\n     pred= Xdata%*%betaPrev\n     res=(y-pred)\n     \n     w = 1/abs(res)\n     w[w&gt;maxW]=maxW  # adjustment to avoid super large numbers [ size relative to problem]\n     W = diag(as.vector(w))\n     \n     betaWHat = solve(t(Xdata)%*%W%*%Xdata) %*%(t(Xdata)%*%W%*%y )\n     #show(betaWHat)\n  }\n  betaWHat\n}\n\n## Standard case \nbetaHat_L2=leastSquares(Xdata,y)\nbetaHat_L1=IRLS_L1(Xdata,y)\n\n\nXplot=cbind(1,c(-5,0,5))\n\nplot(x,y,xlim=c(-6,6),ylim=c(-6,6))\nlines(c(-5,5),c(-4,6),lty=3)\nlines(Xplot[,2], Xplot%*%betaHat_L2,lty = 2,col=3,lwd=2)\nlines(Xplot[,2], Xplot%*%betaHat_L1,lty = 2,col=4,lwd=2)\n\nmaxW=10\npred= Xdata%*%betaHat_L1\nres=(y-pred)\nw = 1/abs(res)\nplot(w,type=\"l\",log=\"y\",ylim=c(0.1,300))\nw[w&gt;maxW]=maxW  \npoints(w)\n\n\n### Case with outliers \nymod=y\nymod[1]=0\nymod[14]=0\nbetaHat_L2m=leastSquares(Xdata,ymod)\nbetaHat_L1m=IRLS_L1(Xdata,ymod)\n\n\n\nplot(x,ymod,xlim=c(-6,6),ylim=c(-6,6))\nlines(c(-5,5),c(-4,6),lty=3)\nlines(Xplot[,2], Xplot%*%betaHat_L2m,lty = 2,col=3,lwd=2)\nlines(Xplot[,2], Xplot%*%betaHat_L1m,lty = 2,col=4,lwd=2)\n\n\n\nmaxW=10\npred= Xdata%*%betaHat_L1m\nres=(ymod-pred)\nw = 1/abs(res)\nplot(w,type=\"l\",log=\"y\",ylim=c(0.1,300))\nw[w&gt;maxW]=maxW  \npoints(w)",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#convex-optimization",
+    "href": "optim.html#convex-optimization",
+    "title": "2  최적화 방법",
+    "section": "2.14 Convex Optimization",
+    "text": "2.14 Convex Optimization\nConvex optimization은\n\nLeast squares\nLinear programming\nConvex quadratic minimization with linear or convex quadratic constraints\nConic optimization\nSecond order cone programming\n\n등 다양한 문제를 풀 수 있는 방법이다.\nCovex optimization 문제를 다음과 같이 정의할 수 있다.\n\n\\(\\text{Minimize}_{\\pmb{x}}\\quad{} \\{f(\\pmb{x})\\}\\)\n\nSubject to \\(\\pmb{a}_i^T \\pmb{x} = b_i\\)\nand \\(g_j (\\pmb{x})\\leq 0\\)\n\n\\(i=1,\\ldots, n_a\\)\n\\(j=1,\\ldots, n_c\\)\n\\(f(\\pmb{x}), g_j (\\pmb{x})\\): convex\n\n이때 \\(f\\)는 convex 함수인데, \\[\nf(t\\pmb{x}_1 + (1-t)\\pmb{x}_2) \\leq t f(\\pmb{x}_1) + (1-t)f(\\pmb{x}_2), \\quad{} \\text{ for } 0 \\leq t \\leq 1\n\\] 을 의미한다.\n\n2.14.1 Lagrangian Multiplier\nConvex optimization에서 \\(\\pmb{A x} = \\pmb{b}\\)와 같이 equality constraint가 있는 문제를 풀고 싶어 할 수 있다. 이 때 쓸 수 있는 방법이 Lagrangian multiplier이다.\n\\[\\begin{align*}\n&\\text{minimize}_{\\pmb{x}} \\{ f(\\pmb{x})\\} &\\text{subj to } \\pmb{A x} = \\pmb{b}\\\\\n\\Leftrightarrow& \\text{minimize}_{\\pmb{x}} \\{ f(\\pmb{x})+\\frac{\\rho}{2}\\|\\pmb{A x} - \\pmb{b}\\|^2 \\}&\\text{subj to } \\pmb{A x} = \\pmb{b}\\\\\n\\Leftrightarrow& \\text{minimize}_{\\pmb{x},\\pmb{\\lambda}} \\{ f(\\pmb{x})+\\frac{\\rho}{2}\\|\\pmb{A x} - \\pmb{b}\\|^2 +\\pmb{\\lambda}^T (\\pmb{A x} - \\pmb{b}) \\}\n\\end{align*}\\]\n이떄\n\n\\(\\pmb{x}: (p\\times 1)\\)\n\\(\\pmb{b}: (q \\times 1)\\)\n\\(\\pmb{A}: (q \\times p)\\)\n\\(\\rho: 1\\times 1\\) is a scalar\n\\(\\lambda: (q \\times 1)\\): the Lagrangian multiplier\nGeometric interpretation: Minimum occurs when the contour line is tangent to constraint\n\n\n\n\n\n\nFigure: Lagrangian multiplier.\n\n\n\n\n그림은 Lagrangian multiplier를 설명하고 있는데, 그림에서 검은 선이 제약식을 나타낸다고 볼 수 있다. \\(f(\\pmb{x})\\)를 \\(f(\\pmb{x})+\\frac{\\rho}{2}\\|\\pmb{A x} - \\pmb{b}\\|^2\\)로 바꾸는 것은 최적화 결과에 영향을 미치지 않는다.\n\n\n2.14.2 Algorithm for solution: Method of multipliers\n\\(\\text{minimize}_{\\pmb{x}} \\{ f(\\pmb{x})+\\frac{\\rho}{2}\\|\\pmb{A x} - \\pmb{b}\\|^2 \\}\\quad{}\\text{subj to } \\pmb{A x} = \\pmb{b}\\)문제를 풀기 위해 method of multipliers 알고리즘을 적용할 수 있다.\n\n\\(\\pmb{\\lambda}^{(0)} = \\pmb{0}\\)\nFor \\(i=1\\), until convergence\n\n2-1. \\(\\pmb{x}^{(i)}=\\text{argmin}\\Big\\{ f(\\pmb{x}) + \\frac{\\rho}{2}\\|\\pmb{A x} - \\pmb{b}\\|^2 + \\pmb{\\lambda}^{(i-1)^T}(\\pmb{A x} - \\pmb{b}) \\Big\\}\\)\n2-2. \\(\\pmb{\\lambda}^{(i)} = \\pmb{\\lambda}^{(i-1)} + \\rho (\\pmb{A}\\pmb{x}^{(i)}-\\pmb{b})\\)",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "optim.html#alternating-direction-method-of-multipliers-admm",
+    "href": "optim.html#alternating-direction-method-of-multipliers-admm",
+    "title": "2  최적화 방법",
+    "section": "2.15 Alternating Direction Method of Multipliers (ADMM)",
+    "text": "2.15 Alternating Direction Method of Multipliers (ADMM)",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>최적화 방법</span>"
+    ]
+  },
+  {
+    "objectID": "gd.html",
+    "href": "gd.html",
+    "title": "3  Gradient Descent",
+    "section": "",
+    "text": "3.1 Basic Setting",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Gradient Descent</span>"
+    ]
+  },
+  {
+    "objectID": "gd.html#basic-setting",
+    "href": "gd.html#basic-setting",
+    "title": "3  Gradient Descent",
+    "section": "",
+    "text": "Goal: minimize some \\(F(\\theta)\\) w.r.t. \\(\\theta\\)\nEmpirical risk: \\[\nF(\\theta) = \\frac{1}{n}\\sum_{i=1}^n f_i (\\theta) + J(\\theta)\n\\]\nOptions for \\(f_i (\\theta)\\): \\[\nf_i (\\theta) =\n\\begin{cases}\n(\\hat{y}_i - y_i)^, & \\text{Least squares}\\\\\nI(\\hat{y}_i \\neq y_i), & \\text{Classification error}\\\\\n-\\log f(y_i; \\theta), & \\text{Log-likelihood}\n\\end{cases}\n\\]\nAlternative: Expected risk \\[\nF(\\theta) = E[f(\\theta; \\pmb{\\varepsilon})], \\quad{}\\pmb{\\varepsilon} \\text{ is some random vector}\n\\]\n\\(F(\\cdot)\\) is nice and smooth, a necessary requirement is \\[\n\\pmb{g}(\\pmb{\\theta}^{*}) = \\frac{\\partial}{\\partial \\pmb{\\theta}}F(\\pmb{\\theta})|_{\\pmb{\\theta}=\\pmb{\\theta}^{*}} = \\pmb{0}\n\\]",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Gradient Descent</span>"
+    ]
+  },
+  {
+    "objectID": "gd.html#ordinary-gradient-descent",
+    "href": "gd.html#ordinary-gradient-descent",
+    "title": "3  Gradient Descent",
+    "section": "3.2 Ordinary Gradient Descent",
+    "text": "3.2 Ordinary Gradient Descent\n\nOrdinary gradient descent: \\[\n\\pmb{\\theta}^{t+1} = \\pmb{\\theta}^{t} - \\pmb{M}_t^{-1}\\pmb{g}(\\pmb{\\theta}^t), \\quad{} \\pmb{M}_t \\text{ is p.d.}\n\\]\nProblem: Gradient might be difficult to compute",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Gradient Descent</span>"
+    ]
+  },
+  {
+    "objectID": "gd.html#stochastic-gradient-descent",
+    "href": "gd.html#stochastic-gradient-descent",
+    "title": "3  Gradient Descent",
+    "section": "3.3 Stochastic Gradient Descent",
+    "text": "3.3 Stochastic Gradient Descent\n\nThe stochastic gradient algorithm replaces the gradient by an estimate instead: \\[\n\\pmb{\\theta}^{t+1} = \\pmb{\\theta}^t -\\alpha_t \\pmb{M}_t^{-1}\\pmb{Z}(\\pmb{\\theta}^{t};\\pmb{\\phi}^t), \\quad{} \\pmb{Z}(\\pmb{\\theta}^T; \\pmb{\\phi}^t) \\approx \\pmb{g} (\\pmb{\\theta}^t)\n\\]\nA class of possibilities are given by \\[\n\\pmb{Z}(\\pmb{\\theta}^{t}; \\pmb{\\phi}^t) = \\frac{1}{n_t} \\sum_{i \\in \\mathcal{S}_t} \\nabla f_i (\\pmb{\\theta}^t), \\quad{} \\mathcal{S}_t \\subset \\{ 1, \\ldots, n\\}, \\quad{} n_t = |\\mathcal{S}_t|\n\\]\n\n\n\n\\begin{algorithm} \\caption{Stochastic gradient descent} \\begin{algorithmic} \\Procedure{SGD}{$\\pmb{Z},\\pmb{\\theta}, \\pmb{\\phi}$} \\For{$t = 1$ \\To $\\cdots$} \\State Simulate the stochastic gradient $\\pmb{Z}(\\pmb{\\theta}^t; \\pmb{\\phi}^t)$ \\State Choose a step size $\\alpha$' \\State Update the new value by $\\pmb{\\theta}^{t+1} \\leftarrow \\pmb{\\theta}^{t} - \\alpha_t \\pmb{M}_t^{-1}\\pmb{Z} (\\pmb{\\theta}^t; \\pmb{\\phi}^t)$ \\EndFor \\EndProcedure \\end{algorithmic} \\end{algorithm}\n\n\n::: {#exm-logistic sgd}",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Gradient Descent</span>"
+    ]
+  },
+  {
+    "objectID": "gd.html#logistic-regression",
+    "href": "gd.html#logistic-regression",
+    "title": "3  Gradient Descent",
+    "section": "3.4 Logistic Regression",
+    "text": "3.4 Logistic Regression\nLogistic regression with \\(n\\) is large:\n\\[\\begin{align*}\nY_i &\\sim \\text{Binomial}(1, p(x_i)), \\quad{} i=1, \\ldots, n\\\\\np(x_i) &= \\frac{\\exp (\\theta_0 + \\theta_1 \\pmb{x})}{1+\\exp (\\theta_0 + \\theta_1 \\pmb{x})}\n\\end{align*}\\]\nWant to minimize\n\\[\\begin{align*}\nF(\\pmb{\\theta}) &= -\\sum_{i=1}^n [y_i \\log (p_i) + (1-y_i) \\log (1-p_i)]\\\\\n&= -\\sum_{i=1}^n [y_i (\\theta_0 + \\theta_1 x_i)- \\log (1 + \\exp (\\theta_0 + \\theta_1 x_i))]\n\\end{align*}\\]\nDefining \\[\nf_i (\\pmb{\\theta}) = -y_i (\\theta_0 + \\theta_1 x_i) + \\log (1+\\exp (\\theta_0 + \\theta_1 x_i))\n\\] we have \\[\n\\nabla f_i (\\pmb{\\theta}) = -\n\\begin{pmatrix}\ny_i - \\frac{\\exp (\\theta_0 + \\theta_1 \\pmb{x})}{1+\\exp (\\theta_0 + \\theta_1 \\pmb{x})}\\\\\n[y_i - \\frac{\\exp (\\theta_0 + \\theta_1 \\pmb{x})}{1+\\exp (\\theta_0 + \\theta_1 \\pmb{x})}]x_i\n\\end{pmatrix}\n\\]\n:::\n\n\n(Intercept)           x \n 0.09808878  1.97299605 \n\n\n\n\n\nFigure: GD vs SGD.\n\n\n\n\n\n3.4.1 Assumptions for proof of convergence:\n\nRequirements on the sequence \\(\\{\\alpha_t\\}\\):\n\n\\[\\begin{align*}\n\\alpha_t &&gt; 0\\\\\n\\sum_{t=2}^{\\infty} \\frac{\\alpha_t}{\\alpha_1 + \\cdots + \\alpha_{t-1}}&=\\infty\\\\\n\\sum_{t=1}^{\\infty} \\alpha_t^2 &&lt; \\infty\n\\end{align*}\\]\nNote that the second condition implies \\(\\sum_{t=1}^{\\infty} \\alpha_t = \\infty\\).\n\nRequirements on the function \\(g(x)\\) combined with its estimate:\n\n\\[\\begin{align*}\n&\\exists \\delta \\geq 0 \\text{ such that } g(x) \\leq -\\delta \\text{ for } x &lt; \\theta^{*} \\text { and } g(x) \\geq \\delta \\text{ for } \\theta^{*}\\\\\n&E[Z(\\theta; \\phi)] = g(\\theta) \\text{ and }P(|Z(\\theta; \\phi)| &lt; C)=1\n\\end{align*}\\]\nThe constraint \\(|Z(\\theta; \\phi)| &lt; C\\) is included to simplify the proof. More general results are available.\n\nWant to show that the SGD procedure is consistent\n\n\nDefinition 3.1 (Consistency) If \\(\\lim_{t\\rightarrow \\infty}\\pmb{\\theta}^t = \\pmb{\\theta}^{*}\\) in probability, irrespective of any arbitrary initial value \\(\\pmb{\\theta}^{0}\\), we call the procedure consistent. Here, convergence in probability means that for any \\(\\varepsilon &gt;0\\), \\[\n\\lim_{t\\rightarrow\\infty}P(|\\pmb{\\theta}^t - \\pmb{\\theta}^{*}|&gt;\\varepsilon)=0.\n\\]\n\n\nDo this in three steps\n\n\nProve that L2 convergence gives consistency\nProve that the sequence converge\nProve that we converge to the true parameter",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Gradient Descent</span>"
+    ]
+  },
+  {
+    "objectID": "gd.html#stochastic-gradients-and-neural-nets",
+    "href": "gd.html#stochastic-gradients-and-neural-nets",
+    "title": "3  Gradient Descent",
+    "section": "3.5 Stochastic Gradients and Neural Nets",
+    "text": "3.5 Stochastic Gradients and Neural Nets\n\\[\n\\begin{align*}\nQ(\\pmb{\\theta}) &= R(\\pmb{\\theta}) + \\lambda J (\\pmb{\\theta})\\\\\nR(\\pmb{\\theta}) &= \\sum_{i=1}^n (y_i - f(\\pmb{x}_i))^2\\\\\nf(X) &= \\sum_{m=1}^{M_{NN}}\\beta_m \\sigma (\\alpha_m^T X + \\alpha_0)\n\\end{align*}\n\\]\n\n\\(Q\\) and their derivatives require a sum of \\(n\\) terms\nCan use a stochastic version by samping randomly a subset of \\(\\{1,\\ldots, n\\}\\)\nCalled mini-batching\nAdvantages:\n\nMuch faster\nOften give better solutions\nCan be used to track changes",
+    "crumbs": [
+      "Optimization Methods",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Gradient Descent</span>"
+    ]
+  },
+  {
+    "objectID": "summary.html",
+    "href": "summary.html",
+    "title": "4  Summary",
+    "section": "",
+    "text": "In summary, this book has no content whatsoever.\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "Outro",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Summary</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "crumbs": [
+      "Outro",
+      "References"
+    ]
+  }
+]

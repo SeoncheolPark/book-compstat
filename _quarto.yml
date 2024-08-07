@@ -1,0 +1,53 @@
+project:
+  type: book
+
+book:
+  title: "Computational Satistics"
+  author: "Seoncheol Park"
+  date: today
+  search: true
+  downloads: [pdf]
+  chapters:
+    - part: "Intro"
+      chapters:
+        - index.qmd
+        - intro.qmd
+    - part: "Optimization Methods"
+      chapters:
+        - optim.qmd
+        - gd.qmd
+    - part: "Outro"
+      chapters:
+        - summary.qmd
+        - references.qmd
+
+bibliography: references.bib
+
+filters:
+  - pseudocode
+
+format:
+  html:
+    theme: cosmo
+    include-in-header:
+      text: |
+        <script>
+        MathJax = {
+          loader: {
+            load: ['[tex]/boldsymbol']
+          },
+          tex: {
+            tags: "all",
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\\[','\\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            packages: {
+              '[+]': ['boldsymbol']
+            }
+          }
+        };
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+editor: visual

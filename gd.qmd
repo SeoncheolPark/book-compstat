@@ -1,0 +1,307 @@
+# Gradient Descent
+
+## Basic Setting
+
+<!--
+https://www.uio.no/studier/emner/matnat/math/STK4051/v24/timeplan/lecture_04_sgd_2024.pdf
+-->
+
+- Goal: minimize some $F(\theta)$ w.r.t. $\theta$
+
+- **Empirical risk**:
+$$
+F(\theta) = \frac{1}{n}\sum_{i=1}^n f_i (\theta) + J(\theta)
+$$
+
+- Options for $f_i (\theta)$:
+$$
+f_i (\theta) = 
+\begin{cases}
+(\hat{y}_i - y_i)^, & \text{Least squares}\\
+I(\hat{y}_i \neq y_i), & \text{Classification error}\\
+-\log f(y_i; \theta), & \text{Log-likelihood}
+\end{cases}
+$$
+
+- Alternative: **Expected risk**
+$$
+F(\theta) = E[f(\theta; \pmb{\varepsilon})], \quad{}\pmb{\varepsilon} \text{ is some random vector}
+$$
+
+- $F(\cdot)$ is nice and smooth, a necessary requirement is
+$$
+\pmb{g}(\pmb{\theta}^{*}) = \frac{\partial}{\partial \pmb{\theta}}F(\pmb{\theta})|_{\pmb{\theta}=\pmb{\theta}^{*}} = \pmb{0}
+$$
+
+## Ordinary Gradient Descent
+
+- Ordinary gradient descent:
+$$
+\pmb{\theta}^{t+1} = \pmb{\theta}^{t} - \pmb{M}_t^{-1}\pmb{g}(\pmb{\theta}^t), \quad{} \pmb{M}_t \text{ is p.d.}
+$$
+
+- Problem: Gradient might be difficult to compute
+
+## Stochastic Gradient Descent
+
+- The **stochastic gradient** algorithm replaces the gradient by an **estimate** instead:
+$$
+\pmb{\theta}^{t+1} = \pmb{\theta}^t -\alpha_t \pmb{M}_t^{-1}\pmb{Z}(\pmb{\theta}^{t};\pmb{\phi}^t), \quad{} \pmb{Z}(\pmb{\theta}^T; \pmb{\phi}^t) \approx \pmb{g} (\pmb{\theta}^t)
+$$
+
+- A class of possibilities are given by
+$$
+\pmb{Z}(\pmb{\theta}^{t}; \pmb{\phi}^t) = \frac{1}{n_t} \sum_{i \in \mathcal{S}_t} \nabla f_i (\pmb{\theta}^t), \quad{} \mathcal{S}_t \subset \{ 1, \ldots, n\}, \quad{} n_t = |\mathcal{S}_t|
+$$
+
+```pseudocode
+#| label: alg-sgd
+#| html-indent-size: "1.2em"
+#| html-comment-delimiter: "//"
+#| html-line-number: true
+#| html-line-number-punc: ":"
+#| html-no-end: false
+#| pdf-placement: "htb!"
+#| pdf-line-number: true
+
+\begin{algorithm}
+\caption{Stochastic gradient descent}
+\begin{algorithmic}
+\Procedure{SGD}{$\pmb{Z},\pmb{\theta}, \pmb{\phi}$}
+  \For{$t = 1$ \To $\cdots$}
+    \State Simulate the stochastic gradient $\pmb{Z}(\pmb{\theta}^t; \pmb{\phi}^t)$
+    \State Choose a step size $\alpha$'
+    \State Update the new value by $\pmb{\theta}^{t+1} \leftarrow \pmb{\theta}^{t}  - \alpha_t \pmb{M}_t^{-1}\pmb{Z} (\pmb{\theta}^t; \pmb{\phi}^t)$
+  \EndFor
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+```
+
+::: {#exm-logistic sgd}
+
+## Logistic Regression
+
+Logistic regression with $n$ is large:
+
+\begin{align*}
+Y_i &\sim \text{Binomial}(1, p(x_i)), \quad{} i=1, \ldots, n\\
+p(x_i) &= \frac{\exp (\theta_0 + \theta_1 \pmb{x})}{1+\exp (\theta_0 + \theta_1 \pmb{x})}
+\end{align*}
+
+
+Want to minimize
+
+\begin{align*}
+F(\pmb{\theta}) &= -\sum_{i=1}^n [y_i \log (p_i) + (1-y_i) \log (1-p_i)]\\
+&= -\sum_{i=1}^n [y_i (\theta_0 + \theta_1 x_i)- \log (1 + \exp (\theta_0 + \theta_1 x_i))]
+\end{align*}
+
+Defining
+$$
+f_i (\pmb{\theta}) = -y_i (\theta_0 + \theta_1 x_i) + \log (1+\exp (\theta_0 + \theta_1 x_i))
+$$
+we have
+$$
+\nabla f_i (\pmb{\theta}) = -
+\begin{pmatrix}
+y_i - \frac{\exp (\theta_0 + \theta_1 \pmb{x})}{1+\exp (\theta_0 + \theta_1 \pmb{x})}\\
+[y_i - \frac{\exp (\theta_0 + \theta_1 \pmb{x})}{1+\exp (\theta_0 + \theta_1 \pmb{x})}]x_i
+\end{pmatrix}
+$$
+
+:::
+
+
+```{r}
+#| echo: false
+#| message: false
+#| fig-align: center
+#| fig-cap: "Figure: GD vs SGD."
+#| out-width: 70%
+#| fig-height: 6
+#| fig-weight: 6
+#| view-distance: 10
+
+#SGD_logistic.R
+#Stochastic gradient on logistic regression
+#
+#Simulate data
+set.seed(2323)
+n = 100000
+x = rnorm(n)
+theta = c(0.1,2)
+p = exp(theta[1]+theta[2]*x)/(1+exp(theta[1]+theta[2]*x))
+y = rbinom(n,1,prob=p)
+
+loglik = function(b,x,y)
+{
+  eta = b[1]+b[2]*x
+  p = exp(eta)/(1+exp(eta))
+  l = sum(y*eta-log(1+exp(eta)))
+  l
+}
+
+#Obtain true optimum by glm
+b.opt = glm(y~x,family=binomial)$coef
+show(b.opt)
+
+N.it1 = 200       #Number of iterations
+N.it2 = 1000#00     #Number of iterations
+N.it3 = 1000#00    #Number of iterations
+N.it4 = 1000#00    #Number of iterations
+
+#Gradient decent
+start_time <- Sys.time()
+b = c(0,1)         #Initial value
+#Loop
+bseq = b
+alpha = 1
+l = loglik(b,x,y)
+for(it in 1:N.it1)
+{
+  #alpha = 10/it
+  alpha  = 0.5
+  p.cur = exp(b[1]+b[2]*x)/(1+exp(b[1]+b[2]*x))
+  g = colMeans(cbind(y-p.cur,(y-p.cur)*x))
+  b = b + alpha*g  #Note we are doing maximization
+  l = loglik(b,x,y)
+#  show(c(l,b))
+  bseq = rbind(bseq,b)
+}
+end_time <- Sys.time()
+t1 = as.numeric(end_time-start_time)
+#show(end_time - start_time)
+
+## SGD k=1   alpha=10/it
+start_time <- Sys.time()
+b = c(0,1)         #Initial value
+k = 1             #Number of samples for estimating gradient
+#Loop
+bseq2 = b
+for(it in 1:N.it2)
+{
+  i = sample(1:n,k)
+  alpha = 10/it
+  p.i = exp(b[1]+b[2]*x[i])/(1+exp(b[1]+b[2]*x[i]))
+  g = colMeans(cbind(y[i]-p.i,(y[i]-p.i)*x[i]))
+  b = b + alpha*g
+  bseq2 = rbind(bseq2,b)
+}
+end_time <- Sys.time()
+t2 = as.numeric(end_time-start_time)
+#show(end_time - start_time)
+
+
+# SGD k=10 alpha =10/it
+start_time <- Sys.time()
+b = c(0,1)         #Initial value
+k = 10             #Number of samples for estimating gradient
+#Loop
+bseq3 = b
+for(it in 1:N.it3)
+{
+  i = sample(1:n,k)
+  alpha = 10/it
+  p.i = exp(b[1]+b[2]*x[i])/(1+exp(b[1]+b[2]*x[i]))
+  g = colMeans(cbind(y[i]-p.i,(y[i]-p.i)*x[i]))
+  b = b + alpha*g
+  bseq3 = rbind(bseq3,b)
+}
+end_time <- Sys.time()
+t3 = as.numeric(end_time-start_time)
+#show(end_time - start_time)
+
+## constant minibatch
+# SGD k=10 alpha =10/it
+
+start_time <- Sys.time()
+b = c(0,1)         #Initial value
+k = 10             #Number of samples for estimating gradient
+#Loop
+bseq4 = b
+for(it in 1:N.it4)
+{
+  i = sample(1:n,k)
+  #alpha = 10/it
+  alpha=0.1
+  p.i = exp(b[1]+b[2]*x[i])/(1+exp(b[1]+b[2]*x[i]))
+  g = colMeans(cbind(y[i]-p.i,(y[i]-p.i)*x[i]))
+  b = b + alpha*g
+  bseq4 = rbind(bseq4,b)
+}
+end_time <- Sys.time()
+t4 = as.numeric(end_time-start_time)
+#show(end_time - start_time)
+
+plot(c(0:N.it1)*0.05*t1/N.it1,bseq[,2],ylim=c(1,3),col=2,xlab="Seconds",
+        ylab=expression(~beta[2]),type="l");abline(h=b.opt[2],col=1);
+lines(c(0:N.it2)*t2/N.it2,bseq2[,2],col=3)
+lines(c(0:N.it3)*t3/N.it3,bseq3[,2],col=4)
+lines(c(0:N.it4)*t4/N.it4,bseq4[,2],col=5)
+legend("bottomright",c("Opt","GD alpha=0.5","SGD,k=1, alpha=1/it ","SGD,k=10, alpha=1/it","SGD,k=10 aplha=0.1"),lty=1,col=1:5)
+
+```
+
+### Assumptions for proof of convergence:
+
+- Requirements on the sequence $\{\alpha_t\}$:
+
+\begin{align*}
+\alpha_t &> 0\\
+\sum_{t=2}^{\infty} \frac{\alpha_t}{\alpha_1 + \cdots + \alpha_{t-1}}&=\infty\\
+\sum_{t=1}^{\infty} \alpha_t^2 &< \infty
+\end{align*}
+
+Note that the second condition implies $\sum_{t=1}^{\infty} \alpha_t = \infty$.
+
+- Requirements on the function $g(x)$ combined with its estimate:
+
+\begin{align*}
+&\exists \delta \geq 0 \text{ such that } g(x) \leq -\delta \text{ for } x < \theta^{*} \text { and } g(x) \geq \delta \text{ for } \theta^{*}\\
+&E[Z(\theta; \phi)] = g(\theta) \text{ and }P(|Z(\theta; \phi)| < C)=1
+\end{align*}
+
+The constraint $|Z(\theta; \phi)| < C$ is included to simplify the proof. More general results are available.
+
+- Want to show that the SGD procedure is consistent
+
+::: {#def-consistent}
+
+## Consistency
+
+If $\lim_{t\rightarrow \infty}\pmb{\theta}^t = \pmb{\theta}^{*}$ **in probability**, irrespective of any arbitrary initial value $\pmb{\theta}^{0}$, we call the procedure **consistent**. Here, convergence in probability means that for any $\varepsilon >0$,
+$$
+\lim_{t\rightarrow\infty}P(|\pmb{\theta}^t - \pmb{\theta}^{*}|>\varepsilon)=0.
+$$
+
+:::
+
+- Do this in three steps
+
+1. Prove that L2 convergence gives consistency
+
+2. Prove that the sequence converge
+
+3. Prove that we converge to the true parameter
+
+## Stochastic Gradients and Neural Nets
+
+$$
+\begin{align*}
+Q(\pmb{\theta}) &= R(\pmb{\theta}) + \lambda J (\pmb{\theta})\\
+R(\pmb{\theta}) &= \sum_{i=1}^n (y_i - f(\pmb{x}_i))^2\\
+f(X) &= \sum_{m=1}^{M_{NN}}\beta_m \sigma (\alpha_m^T X + \alpha_0)
+\end{align*}
+$$
+
+- $Q$ and their derivatives require a sum of $n$ terms
+
+- Can use a stochastic version by samping randomly a **subset** of $\{1,\ldots, n\}$
+
+- Called **mini-batching**
+
+- Advantages:
+  + Much **faster**
+  + Often give **better solutions**
+  + Can be used to **track changes**
